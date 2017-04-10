@@ -37,7 +37,6 @@ header p{
     background-color:#ccc0b3;
     position: absolute;
     margin:10px auto;
-    pedding:100px;
 }
 select{
        width:50px;
@@ -59,7 +58,7 @@ select{
     font-size:20px;
     margin:5px auto;
     text-align:left;
-    pedding:50px;
+    padding:100px;
 }
 .set{
     width:200px;
@@ -68,7 +67,7 @@ select{
     background-color:#ccc0b3;
     position: absolute;
 	margin:10px auto;
-pedding:10px;
+    padding:10px;
 }
 #grid-container{
     width:460px;
