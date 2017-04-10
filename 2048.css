@@ -32,7 +32,7 @@ header p{
 }
 #some{
     width:400px;
-    
+    padding:10px;
     border-radius: 6px;
     background-color:#ccc0b3;
     position: absolute;
@@ -58,7 +58,7 @@ select{
     font-size:20px;
     margin:5px auto;
     text-align:left;
-    padding:100px;
+    padding:0px;
 }
 .set{
     width:200px;
@@ -67,7 +67,7 @@ select{
     background-color:#ccc0b3;
     position: absolute;
 	margin:10px auto;
-    padding:10px;
+padding:10px;
 }
 #grid-container{
     width:460px;
