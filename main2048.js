@@ -12,9 +12,9 @@ $(document).ready(function(){
 });
 
 function newgame(){
-    //初始化棋盘格
+    //鍒濆鍖栨鐩樻牸
     init();
-    //在随机两个格子生成数字
+    //鍦ㄩ殢鏈轰袱涓牸瀛愮敓鎴愭暟瀛�
     GetOneNumber();
     GetOneNumber();
 }
@@ -75,7 +75,7 @@ function GetOneNumber(){
     if( nospace( board ) )
         return false;
 
-    //随机一个位置
+    //闅忔満涓€涓綅缃�
     var randx = Math.floor( Math.random()  * 4 ) ;
     var randy = Math.floor( Math.random()  * 4 ) ;
 
@@ -86,10 +86,10 @@ function GetOneNumber(){
         randx = Math.floor( Math.random()  * 4 ) ;
         randy = Math.floor( Math.random()  * 4 ) ;
     }
-    //随机一个数字
+    //闅忔満涓€涓暟瀛�
     var randNumber = Math.random() < 0.5 ? 2 : 4;
 
-    //在随机位置显示随机数字
+    //鍦ㄩ殢鏈轰綅缃樉绀洪殢鏈烘暟瀛�
     board[randx][randy] = randNumber;
     showNumberWithAnimation( randx , randy , randNumber );
 
