@@ -32,56 +32,43 @@ header p{
 }
 #some{
     width:400px;
+    
     border-radius: 6px;
     background-color:#ccc0b3;
     position: absolute;
-	margin:10px auto;
-   pedding:10px;
+    margin:10px auto;
+    pedding:100px;
 }
 select{
        width:50px;
        background-color:#ccc0b3;
+       
 }
 .option{
 	width:150px;
 	height:30px;
 }
-#setbuttom{
-    display:block;
-    margin:0px auto;
-    width:100px;
-    padding:10px 10px;
-    background-color:black;
-    font-family:Arial;
-    color:black;
-    border-radius:10px;
-    text-decoration:none;
-}
 .rule-title{
-	font-family:Arial;
+    font-family:Arial;
     font-size:30px;
     margin:5px auto;
-	text-align:center;
+    text-align:center;
 }
 .rule{
     font-family:Arial;
     font-size:20px;
     margin:5px auto;
-	text-align:left;
+    text-align:left;
+    pedding:50px;
 }
 .set{
-	width:200px;
-    height:220px;
+    width:200px;
+    height:210px;
     border-radius: 6px;
     background-color:#ccc0b3;
     position: absolute;
 	margin:10px auto;
-}
-.set-lanage{
-	font-family:Arial;
-    font-size:30px;
-    margin:5px auto;
-	text-align:center;
+pedding:10px;
 }
 #grid-container{
     width:460px;
