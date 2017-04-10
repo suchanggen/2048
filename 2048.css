@@ -32,11 +32,11 @@ header p{
 }
 #some{
     width:400px;
-    height:495px;
     border-radius: 6px;
     background-color:#ccc0b3;
     position: absolute;
 	margin:10px auto;
+   pedding:10px;
 }
 select{
        width:50px;
