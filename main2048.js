@@ -10,22 +10,20 @@ var maxnum=2;
 $(document).ready(function(){
     newgame();
 });
-
 function newgame(){
-    //鍒濆鍖栨鐩樻牸
+    //初始化棋盘格
     init();
-    //鍦ㄩ殢鏈轰袱涓牸瀛愮敓鎴愭暟瀛�
+    //在随机两个格子生成数字
     GetOneNumber();
     GetOneNumber();
 }
-
 function init(){
     for( var i = 0 ; i < 4 ; i ++ )
         for( var j = 0 ; j < 4 ; j ++ ){
 
             var gridCell = $('#grid-cell-'+i+"-"+j);
-            gridCell.css('top', getPosTop( i , j ) );
-            gridCell.css('left', getPosLeft( i , j ) );
+            gridCell.css('top', 20+i*120);
+            gridCell.css('left', 20+j*120);
         }
 
     for( var i = 0 ; i < 4 ; i ++ ){
@@ -41,7 +39,6 @@ function init(){
 
     score = 0;
 }
-
 function updateBoardView(){
 
     $(".number-cell").remove();
@@ -53,14 +50,14 @@ function updateBoardView(){
             if( board[i][j] == 0 ){
                 theNumberCell.css('width','0px');
                 theNumberCell.css('height','0px');
-                theNumberCell.css('top',getPosTop(i,j) + 50 );
-                theNumberCell.css('left',getPosLeft(i,j) + 50 );
+                theNumberCell.css('top',20+i*120 + 50 );
+                theNumberCell.css('left',20+j*120 + 50 );
             }
             else{
                 theNumberCell.css('width','100px');
                 theNumberCell.css('height','100px');
-                theNumberCell.css('top',getPosTop(i,j));
-                theNumberCell.css('left',getPosLeft(i,j));
+                theNumberCell.css('top',20+i*120);
+                theNumberCell.css('left',20+j*120);
                 theNumberCell.css('background-color',getNumberBackgroundColor( board[i][j] ) );
                 theNumberCell.css('color',getNumberColor( board[i][j] ) );
                 theNumberCell.text( board[i][j] );
@@ -69,29 +66,28 @@ function updateBoardView(){
             hadMerged[i][j] = false;
         }
 }
-
 function GetOneNumber(){
 
     if( nospace( board ) )
         return false;
 
-    //闅忔満涓€涓綅缃�
-    var randx = Math.floor( Math.random()  * 4 ) ;
-    var randy = Math.floor( Math.random()  * 4 ) ;
+    //随机一个位置
+    var x = Math.floor( Math.random()  * 4 ) ;
+    var y = Math.floor( Math.random()  * 4 ) ;
 
    
     while(1){
-        if( board[randx][randy] == 0 )
+        if( board[x][y] == 0 )
             break;
-        randx = Math.floor( Math.random()  * 4 ) ;
-        randy = Math.floor( Math.random()  * 4 ) ;
+        x = Math.floor( Math.random()  * 4 ) ;
+        y = Math.floor( Math.random()  * 4 ) ;
     }
-    //闅忔満涓€涓暟瀛�
-    var randNumber = Math.random() < 0.5 ? 2 : 4;
+    //随机一个数字
+    var num = Math.random() < 0.5 ? 2 : 4;
 
-    //鍦ㄩ殢鏈轰綅缃樉绀洪殢鏈烘暟瀛�
-    board[randx][randy] = randNumber;
-    showNumberWithAnimation( randx , randy , randNumber );
+    //在随机位置显示随机数字
+    board[x][y] = num;
+    showNumberWithAnimation( x , y , num );
 
     return true;
 }
@@ -147,195 +143,183 @@ $(document).keydown( function( event ){
             break;
     }
 });
-
-function isgameover(){
-    if( nospace( board ) && nomove( board ) ){
-        gameover();
+function moveRight() {
+    for(var i=0;i<4;i++){
+        for (var m = 0; m < 3; m++) {
+            for(var j=3;j>0;j--)
+            {
+                if (board[i][j] == 0 && board[i][j - 1] != 0) {
+                    board[i][j] = board[i][j - 1];
+                    board[i][j - 1] = 0;
+                    showMoveAnimation(i, j - 1, i, j);
+                }
+            }
+        }
     }
-}
-
-function gameover(){
-    alert('gameover!');
-}
-
-function moveLeft(){
-
-    if( !canMoveLeft( board ) )
-        return false;
-
-    //moveLeft
-    for( var i = 0 ; i < 4 ; i ++ )
-        for( var j = 1 ; j < 4 ; j ++ ){
-            if( board[i][j] != 0 ){
-
-                for( var k = 0 ; k < j ; k ++ ){
-                    if( board[i][k] == 0 && noBlockHorizontal( i , k , j , board ) ){
-                        //move
-                        showMoveAnimation( i , j , i , k );
-                        board[i][k] = board[i][j];
-                        board[i][j] = 0;
-                        continue;
-                    }
-                    else if( board[i][k] == board[i][j] && noBlockHorizontal( i , k , j , board ) && !hadMerged[i][k] ){
-                        //move
-                        showMoveAnimation( i , j , i , k );
-                        //add
-                        board[i][k] += board[i][j];
-                        board[i][j] = 0;
-                        //add score
-                        score += board[i][k];
-                        updateScore( score );
-
-                        hadMerged[i][k] = true;
-                        continue;
-                    }
+    for (var i = 0; i < 4; i++) {
+        for (var j = 3; j > 0; j--) {
+            if(board[i][j]!=0&&(board[i][j]==board[i][j-1]))
+            {
+                board[i][j] *= 2;
+                board[i][j - 1] = 0;
+                score += board[i][j];
+                showMoveAnimation(i, j- 1, i, j);
+            }
+        }
+    }
+    for (var i = 0; i < 4; i++) {
+        for (var m = 0; m < 3; m++) {
+            for (var j = 3; j > 0; j--) {
+                if (board[i][j] == 0 && board[i][j - 1] != 0) {
+                    board[i][j] = board[i][j - 1];
+                    board[i][j - 1] = 0;
+                    showMoveAnimation(i, j - 1, i, j);
                 }
             }
         }
-
-    setTimeout("updateBoardView()",200);
+    }
+    setTimeout("updateBoardView()", 200); 
     return true;
 }
-
-function moveRight(){
-    if( !canMoveRight( board ) )
-        return false;
-
-    //moveRight
-    for( var i = 0 ; i < 4 ; i ++ )
-        for( var j = 2 ; j >= 0 ; j -- ){
-            if( board[i][j] != 0 ){
-                for( var k = 3 ; k > j ; k -- ){
-
-                    if( board[i][k] == 0 && noBlockHorizontal( i , j , k , board ) ){
-                        //move
-                        showMoveAnimation( i , j , i , k );
-                        board[i][k] = board[i][j];
-                        board[i][j] = 0;
-                        continue;
-                    }
-                    else if( board[i][k] == board[i][j] && noBlockHorizontal( i , j , k , board ) && !hadMerged[i][k] ){
-                        //move
-                        showMoveAnimation( i , j , i , k);
-                        //add
-                        board[i][k] += board[i][j];
-                        board[i][j] = 0;
-                        //add score
-                        score += board[i][k];
-                        updateScore( score );
-
-                        hadMerged[i][k] = true;
-                        continue;
-                    }
-                }
+function moveLeft() {
+    for (var i = 0; i < 4; i++)
+        for (m = 0; m < 3;m++)
+        for(var j=0;j<3;j++)
+        {  
+            if(board[i][j]==0&&board[i][j+1]!=0)
+            {
+                board[i][j] = board[i][j + 1];
+                board[i][j + 1] = 0;
+                showMoveAnimation(i, j+1, i, j);
             }
         }
-
-    setTimeout("updateBoardView()",200);
-    return true;
-}
-
-function moveUp(){
-
-    if( !canMoveUp( board ) )
-        return false;
-
-    //moveUp
-    for( var j = 0 ; j < 4 ; j ++ )
-        for( var i = 1 ; i < 4 ; i ++ ){
-            if( board[i][j] != 0 ){
-                for( var k = 0 ; k < i ; k ++ ){
-
-                    if( board[k][j] == 0 && noBlockVertical( j , k , i , board ) ){
-                        //move
-                        showMoveAnimation( i , j , k , j );
-                        board[k][j] = board[i][j];
-                        board[i][j] = 0;
-                        continue;
-                    }
-                    else if( board[k][j] == board[i][j] && noBlockVertical( j , k , i , board ) && !hadMerged[k][j] ){
-                        //move
-                        showMoveAnimation( i , j , k , j );
-                        //add
-                        board[k][j] += board[i][j];
-                        board[i][j] = 0;
-                        //add score
-                        score += board[k][j];
-                        updateScore( score );
-
-                        hadMerged[k][j] = true;
-                        continue;
-                    }
-                }
+    for(var i=0;i<4;i++)
+        for (var j = 0; j < 3; j++)
+        {
+            if(board[i][j]!=0&&board[i][j]==board[i][j+1])
+            {  
+                board[i][j] *= 2;
+                board[i][j + 1] = 0;
+                score += board[i][j];
+                showMoveAnimation(i, j + 1, i, j);
             }
         }
-
-    setTimeout("updateBoardView()",200);
-    return true;
-}
-
-function moveDown(){
-    if( !canMoveDown( board ) )
-        return false;
-
-    //moveDown
-    for( var j = 0 ; j < 4 ; j ++ )
-        for( var i = 2 ; i >= 0 ; i -- ){
-            if( board[i][j] != 0 ){
-                for( var k = 3 ; k > i ; k -- ){
-
-                    if( board[k][j] == 0 && noBlockVertical( j , i , k , board ) ){
-                        //move
-                        showMoveAnimation( i , j , k , j );
-                        board[k][j] = board[i][j];
-                        board[i][j] = 0;
-                        continue;
-                    }
-                    else if( board[k][j] == board[i][j] && noBlockVertical( j , i , k , board ) && !hadMerged[k][j] ){
-                        //move
-                        showMoveAnimation( i , j , k , j );
-                        //add
-                        board[k][j] += board[i][j];
-                        board[i][j] = 0;
-                        //add score
-                        score += board[k][j];
-                        updateScore( score );
-
-                        hadMerged[k][j] = true;
-                        continue;
-                    }
+    for (var i = 0; i < 4; i++)
+        for (m = 0; m < 3; m++)
+            for (var j = 0; j < 3; j++) {
+                if (board[i][j] == 0 && board[i][j + 1] != 0) {
+                    board[i][j] = board[i][j + 1];
+                    board[i][j + 1] = 0;
+                    showMoveAnimation(i, j + 1, i, j);
                 }
             }
-        }
-
-    setTimeout("updateBoardView()",200);
+    setTimeout("updateBoardView()", 200);
     return true;
 }
-function showNumberWithAnimation( i , j , randNumber ){
+function moveDown() {
+    for (var i = 0; i < 4; i++)
+        for (m = 0; m < 3; m++)
+            for (var j = 3; j > 0; j--) {
+                if (board[j][i] == 0 && board[j-1][i] != 0) {
+                    board[j][i] = board[j-1][i];
+                    board[j-1][i] = 0;
+                    showMoveAnimation(j - 1, i, j, i);
+                }
+            }
+    for (var i = 0; i < 4; i++)
+        for (var j = 3; j > 0; j--) {
+            if (board[j][i] != 0 && board[j][i] == board[j-1][i]) {
+                board[j][i] *= 2;
+                board[j-1][i] = 0;
+                score += board[j][i];
+                showMoveAnimation(j - 1, i, j, i);
+            }
+        }
+    for (var i = 0; i < 4; i++)
+        for (m = 0; m < 2; m++)
+            for (var j = 3; j > 0; j--) {
+                if (board[j][i] == 0 && board[j-1][i] != 0) {
+                    board[j][i] = board[j-1][i];
+                    board[j-1][i] = 0;
+                    showMoveAnimation(j - 1, i, j, i);
+                }
+            }
+    setTimeout("updateBoardView()", 200);
+    return true;
+}
+function moveUp() {
+    for (var i = 0; i < 4; i++)
+        for (m = 0; m < 3; m++)
+            for (var j = 0;j<3; j++) {
+                if (board[j][i] == 0 && board[j+1][i] != 0) {
+                    board[j][i] = board[j+1][i];
+                    board[j+1][i] = 0;
+                    showMoveAnimation(j + 1, i, j, i);
+                }
+            }
+    for (var i = 0; i < 4; i++)
+        for (var j = 0; j <3; j++) {
+            if (board[j][i] != 0 && board[j][i] == board[j+1][i]) {
+                board[j][i] *= 2;
+                board[j+1][i] = 0;
+                score += board[j][i];
+                showMoveAnimation(j + 1, i, j, i);
+            }
+        }
+    for (var i = 0; i < 4; i++)
+        for (m = 0; m < 2; m++)
+            for (var j = 0; j < 3; j++) {
+                if (board[j][i] == 0 && board[j + 1][i] != 0) {
+                    board[j][i] = board[j + 1][i];
+                    board[j + 1][i] = 0;
+                    showMoveAnimation(j + 1, i, j, i);
+                }
+            }
+    setTimeout("updateBoardView()", 200);
+    return true;
+}
+function isgameover() {
+    if (gameover(board))
+        alert("gameover!");
+    if (maxnum >= 2048)
+        alert("you have won the game!");
+}
+function gameover(board) {
+
+    for (var i = 0 ; i < 4 ; i++)
+        for (var j = 0 ; j < 4 ; j++) 
+            if (board[i][j] == 0)
+                return false;
+    for (var i = 0 ; i < 4 ; i++)
+        for (var j = 0 ; j < 4 ; j++)
+            if (board[i - 1][j] == board[i][j] || board[i + 1][j] == board[i][j] || board[i][j + 1] == board[i][j] || board[i][j - 1] == board[i][j])
+                return false;
+        
+    return true;
+}
+function showNumberWithAnimation( i , j , num ){
 
     var numberCell = $('#number-cell-' + i + "-" + j );
 
-    numberCell.css('background-color',getNumberBackgroundColor( randNumber ) );
-    numberCell.css('color',getNumberColor( randNumber ) );
-    numberCell.text( randNumber );
+    numberCell.css('background-color',getNumberBackgroundColor( num ) );
+    numberCell.css('color',getNumberColor( num ) );
+    numberCell.text( num );
 
     numberCell.animate({
         width:"100px",
         height:"100px",
-        top:getPosTop( i , j ),
-        left:getPosLeft( i , j )
+        top: 20 + i * 120,
+        left: 20 + j * 120
     },50);
 }
-
 function showMoveAnimation( fromx , fromy , tox, toy ){
 
     var numberCell = $('#number-cell-' + fromx + '-' + fromy );
     numberCell.animate({
-        top:getPosTop( tox , toy ),
-        left:getPosLeft( tox , toy )
+        top:20+tox*120,
+        left:20+toy*120
     },200);
 }
-
 function updateScore( score ){
     $('#score').text( score );
 }
@@ -345,14 +329,6 @@ function updateMaxnum(maxnum,board){
 			maxnum=maxnum>board[i][j]?maxnum:board[i][j];
 	$('#maxnum').text(maxnum);
 }
-function getPosTop( i , j ){
-    return 20 + i*120;
-}
-
-function getPosLeft( i , j ){
-    return 20 + j*120;
-}
-
 function getNumberBackgroundColor( number ){
     switch( number ){
         case 2:return "#eee4da";break;
@@ -372,14 +348,12 @@ function getNumberBackgroundColor( number ){
 
     return "black";
 }
-
 function getNumberColor( number ){
     if( number <= 4 )
         return "#776e65";
 
     return "white";
 }
-
 function nospace( board ){
 
     for( var i = 0 ; i < 4 ; i ++ )
@@ -390,70 +364,3 @@ function nospace( board ){
     return true;
 }
 
-function canMoveLeft( board ){
-
-    for( var i = 0 ; i < 4 ; i ++ )
-        for( var j = 1; j < 4 ; j ++ )
-            if( board[i][j] != 0 )
-                if( board[i][j-1] == 0 || board[i][j-1] == board[i][j] )
-                    return true;
-
-    return false;
-}
-
-function canMoveRight( board ){
-
-    for( var i = 0 ; i < 4 ; i ++ )
-        for( var j = 2; j >= 0 ; j -- )
-            if( board[i][j] != 0 )
-                if( board[i][j+1] == 0 || board[i][j+1] == board[i][j] )
-                    return true;
-
-    return false;
-}
-
-function canMoveUp( board ){
-
-    for( var j = 0 ; j < 4 ; j ++ )
-        for( var i = 1 ; i < 4 ; i ++ )
-            if( board[i][j] != 0 )
-                if( board[i-1][j] == 0 || board[i-1][j] == board[i][j] )
-                    return true;
-
-    return false;
-}
-
-function canMoveDown( board ){
-
-    for( var j = 0 ; j < 4 ; j ++ )
-        for( var i = 2 ; i >= 0 ; i -- )
-            if( board[i][j] != 0 )
-                if( board[i+1][j] == 0 || board[i+1][j] == board[i][j] )
-                    return true;
-
-    return false;
-}
-
-function noBlockHorizontal( row , col1 , col2 , board ){
-    for( var i = col1 + 1 ; i < col2 ; i ++ )
-        if( board[row][i] != 0 )
-            return false;
-    return true;
-}
-
-function noBlockVertical( col , row1 , row2 , board ){
-    for( var i = row1 + 1 ; i < row2 ; i ++ )
-        if( board[i][col] != 0 )
-            return false;
-    return true;
-}
-
-function nomove( board ){
-    if( canMoveLeft( board ) ||
-        canMoveRight( board ) ||
-        canMoveUp( board ) ||
-        canMoveDown( board ) )
-        return false;
-
-    return true;
-}
