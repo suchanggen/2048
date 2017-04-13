@@ -1,6 +1,5 @@
 var board = new Array();
 var score = 0;
-var hadMerged = new Array();
 var infoleft=37;
 var infoup=38;
 var inforight=39;
@@ -21,49 +20,42 @@ function init(){
     for( var i = 0 ; i < 4 ; i ++ )
         for( var j = 0 ; j < 4 ; j ++ ){
 
-            var gridCell = $('#grid-cell-'+i+"-"+j);
-            gridCell.css('top', 20+i*120);
-            gridCell.css('left', 20+j*120);
+            var box_now = $('#box-'+i+"-"+j);
+            box_now.css('top', 20+i*120);
+            box_now.css('left', 20+j*120);
         }
-
     for( var i = 0 ; i < 4 ; i ++ ){
         board[i] = new Array();
-        hadMerged[i] = new Array();
+
         for( var j = 0 ; j < 4 ; j ++ ){
             board[i][j] = 0;
-            hadMerged[i][j] = false;
         }
     }
-
     updateBoardView();
-
     score = 0;
 }
 function updateBoardView(){
 
-    $(".number-cell").remove();
+    $(".box_num").remove();
     for( var i = 0 ; i < 4 ; i ++ )
         for( var j = 0 ; j < 4 ; j ++ ){
-            $("#grid-container").append( '<div class="number-cell" id="number-cell-'+i+'-'+j+'"></div>' );
-            var theNumberCell = $('#number-cell-'+i+'-'+j);
-
+            $("#main_box").append( '<div class="box_num" id="box_num-'+i+'-'+j+'"></div>' );
+            var box_num_now = $('#box_num-'+i+'-'+j);
             if( board[i][j] == 0 ){
-                theNumberCell.css('width','0px');
-                theNumberCell.css('height','0px');
-                theNumberCell.css('top',20+i*120 + 50 );
-                theNumberCell.css('left',20+j*120 + 50 );
+                box_num_now.css('width','0px');
+                box_num_now.css('height','0px');
+                box_num_now.css('top',20+i*120 + 50 );
+                box_num_now.css('left',20+j*120 + 50 );
             }
             else{
-                theNumberCell.css('width','100px');
-                theNumberCell.css('height','100px');
-                theNumberCell.css('top',20+i*120);
-                theNumberCell.css('left',20+j*120);
-                theNumberCell.css('background-color',getNumberBackgroundColor( board[i][j] ) );
-                theNumberCell.css('color',getNumberColor( board[i][j] ) );
-                theNumberCell.text( board[i][j] );
+                box_num_now.css('width','100px');
+                box_num_now.css('height','100px');
+                box_num_now.css('top',20+i*120);
+                box_num_now.css('left',20+j*120);
+                box_num_now.css('background-color',getNumberBackgroundColor( board[i][j] ) );
+                box_num_now.css('color',getNumberColor( board[i][j] ) );
+                box_num_now.text( board[i][j] );
             }
-
-            hadMerged[i][j] = false;
         }
 }
 function GetOneNumber(){
@@ -74,8 +66,6 @@ function GetOneNumber(){
     //随机一个位置
     var x = Math.floor( Math.random()  * 4 ) ;
     var y = Math.floor( Math.random()  * 4 ) ;
-
-   
     while(1){
         if( board[x][y] == 0 )
             break;
@@ -84,11 +74,9 @@ function GetOneNumber(){
     }
     //随机一个数字
     var num = Math.random() < 0.5 ? 2 : 4;
-
     //在随机位置显示随机数字
     board[x][y] = num;
     showNumberWithAnimation( x , y , num );
-
     return true;
 }
 $(document).keydown( function( event ){
@@ -299,7 +287,7 @@ function gameover(board) {
 }
 function showNumberWithAnimation( i , j , num ){
 
-    var numberCell = $('#number-cell-' + i + "-" + j );
+    var numberCell = $('#box_num-' + i + "-" + j );
 
     numberCell.css('background-color',getNumberBackgroundColor( num ) );
     numberCell.css('color',getNumberColor( num ) );
@@ -314,7 +302,7 @@ function showNumberWithAnimation( i , j , num ){
 }
 function showMoveAnimation( fromx , fromy , tox, toy ){
 
-    var numberCell = $('#number-cell-' + fromx + '-' + fromy );
+    var numberCell = $('#box_num-' + fromx + '-' + fromy );
     numberCell.animate({
         top:20+tox*120,
         left:20+toy*120
@@ -363,4 +351,3 @@ function nospace( board ){
 
     return true;
 }
-
